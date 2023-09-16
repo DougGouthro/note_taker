@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs')
 const dbInfo = require('./db/db.json')
 
 const app = express();
@@ -12,15 +13,25 @@ app.get('/', (req, res) =>
 res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 
+app.get('/notes', (req, res) =>
+res.sendFile(path.join(__dirname, 'public/notes.html'))
+);
+
 
 app.get("/api/notes",(req, res)=>{
-    console.log("Hi")
-    res.json(dbInfo)
+  var data = fs.readFileSync(path.join(__dirname, 'db', 'db.json'))
+  var myObject= JSON.parse(data)
+  console.log(myObject)
+    res.json(data)
 })
-//app.get("/doug",()=>{console.log("Bye")})
+
 
 app.post("/api/notes", (req,res)=> {
-res.json("WHATS UP!?!?!")
+  var data = fs.writeFile(path.join(__dirname, 'db', 'db.json'),[],(error) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  })
+  res.json("WHATS UP!?!?!")
 })
 
 //app.delete("/api/notes", (req, res)=>{})//EC
